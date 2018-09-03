@@ -13,6 +13,11 @@ namespace ConsoleApp2
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World");
+            CardCatalog main = new CardCatalog("C:\\Users\\Kevin\\Documents\\c#\\Card Catalog\\Serial\\catalog.xml");
+            main.ListBooks();
+            main.AddBooks();
+            main.ListBooks();
+            main.Save();
             Console.ReadLine();
         }
     }
@@ -75,13 +80,16 @@ namespace ConsoleApp2
     }
     public class CardCatalog
     {
-        private string _filename { get; set; }
-        private List<Book> books = new List<Book>();
+        static private string _filename { get; set; }
+        private List<Book> books;
         public CardCatalog(string fileName)
         {
-            //serialization
-            //read filename
-        }
+            _filename = fileName;
+            books = ReadFromFile();
+
+        //serialization
+        //read filename
+    }
         public void ListBooks()
         {
             foreach (var book in books)
@@ -106,9 +114,17 @@ namespace ConsoleApp2
                 ISBN=isbn
             });
         }
-        public void Save(string filename)
+        static public List<Book> ReadFromFile()
         {
-            using (FileStream stream = new FileStream(filename, FileMode.Create))
+            using (FileStream stream = new FileStream(_filename, FileMode.OpenOrCreate))
+            {
+                XmlSerializer XML = new XmlSerializer(typeof(List<Book>));
+                return (List<Book>)XML.Deserialize(stream);
+            }
+        }
+        public void Save()
+        {
+            using (FileStream stream = new FileStream(_filename, FileMode.Create))
             {
                 XmlSerializer XML = new XmlSerializer(typeof(List<Book>));
                 XML.Serialize(stream, books);
