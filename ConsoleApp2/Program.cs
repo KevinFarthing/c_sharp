@@ -7,17 +7,34 @@ using System.IO;
 
 namespace ConsoleApp2
 {
-
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World");
+            bool open = true;
+            Console.WriteLine("Library Initializing");
             CardCatalog main = new CardCatalog("C:\\Users\\Kevin\\Documents\\c#\\Card Catalog\\Serial\\catalog.xml");
-            main.ListBooks();
-            main.AddBooks();
-            main.ListBooks();
-            main.Save();
+            while (open)
+            {
+                Console.WriteLine("Input Command:");
+                int cmd = int.Parse(Console.ReadLine().ToLower());
+                switch (cmd)
+                {
+                    case 1:
+                        main.AddBooks();
+                        break;
+                    case 2:
+                        main.ListBooks();
+                        break;
+                    case 0:
+                        main.Save();
+                        open = false;
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid command");
+                        break;
+                }
+            }
             Console.ReadLine();
         }
     }
